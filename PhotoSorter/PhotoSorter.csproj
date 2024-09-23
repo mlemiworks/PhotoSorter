@@ -8,4 +8,12 @@
 	<UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\check.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\check.png" />
+  </ItemGroup>
+
 </Project>

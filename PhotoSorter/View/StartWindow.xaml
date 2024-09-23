@@ -12,14 +12,25 @@
         <converters:MultiValueConverter x:Key="MultiValueConverter"/>
     </Window.Resources>
 
-    <Grid Width="400" Height="400">
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid Width="400" Height="300">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0">
             <TextBlock Text="Welcome to PhotoSorter" FontSize="20" FontWeight="Bold"/>
-            <TextBlock Text="Please select the folder with photos you want to sort"/>
+            <TextBlock Text="Please select the folder with photos you want to sort" Margin="0 0 0 20"/>
+        </StackPanel>
+        
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1">
+            
 
             <Button Name="beginButton" 
                     Command="{Binding ToggleVisibilityCommand}"
-                    Content="Begin sorting" Width="150" Height="23"
+                    Content="Begin sorting" Width="150" Height="23" Margin="0 30 0 0"
                     Visibility="{Binding IsStartMenuButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             
             
@@ -70,7 +81,7 @@
                 </Grid>
 
                 <Button x:Name="startButton" 
-                        Content="Start sorting" Width="150" Height="23" 
+                        Content="Start sorting" Width="150" Height="23" Margin="0 10px 0 0"
                         Command="{Binding OpenMainWindowCommand}">
                     <Button.CommandParameter>
                         <MultiBinding Converter="{StaticResource MultiValueConverter}">

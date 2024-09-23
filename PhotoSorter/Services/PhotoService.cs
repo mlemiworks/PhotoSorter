@@ -47,16 +47,27 @@ namespace PhotoSorter.Services
             int startIndex = Math.Max(0, currentIndex - bufferSize / 2);
             int endIndex = Math.Min(photoPaths.Count - 1, startIndex + bufferSize - 1);
 
-            // Clear the current buffer
-            photos.Clear();
-
-            // Load the required photos into the buffer
             for (int i = startIndex; i <= endIndex; i++)
-            {
-                photos[i] = new ImageObj(photoPaths[i]);
+            {;
+                foreach (var photo in photos)
+                {
+                }
+                if (!photos.ContainsKey(i)) // Only add if it doesn't already exist
+                {
+                    photos[i] = new ImageObj(photoPaths[i]);
+                }
+                else
+                {
+                    // Optionally update the existing photo if needed
+                    photos[i] = photos[i]; // This line could be simplified
+                }
             }
-        }
 
+            foreach(var photo in photos)
+            {
+                Debug.WriteLine("Photo: " + photo.Key + " is copied: " + photo.Value.IsCopied);
+            }   
+        }
 
     }
 }

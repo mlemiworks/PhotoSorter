@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Security.Policy;
 using System.Windows.Media.Imaging;
 
@@ -9,6 +10,7 @@ namespace PhotoSorter.Model
         public BitmapImage Image { get; private set; }
         public int Index { get; set; }
         public string UriSource { get; private set; } // Store the file path
+        public bool IsCopied { get; set; }
 
 
         public ImageObj(string path)
@@ -21,6 +23,8 @@ namespace PhotoSorter.Model
             image.DecodePixelWidth = 1920; // Maybe one size for image and different size for thumbnail preview?
             image.EndInit();
             Image = image;
+
+            IsCopied = false;
         }
 
     }

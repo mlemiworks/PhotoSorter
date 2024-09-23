@@ -10,12 +10,15 @@ using System.Windows;
 using System.Windows.Controls;
 using PhotoSorter.Services;
 using System.Windows.Media.Imaging;
+using System.Diagnostics;
 
 namespace PhotoSorter.ViewModel
 {
     public class MainWindowViewModel : ViewModelBase
     {
         public FolderPair FolderPair { get; }
+
+        
 
         private PhotoService photoService = new PhotoService();
         // Commands for navigating through the files
@@ -39,7 +42,17 @@ namespace PhotoSorter.ViewModel
             {
                 if (value != null)
                 {
-                    _currentPhoto = new ImageObj(value.UriSource.ToString());
+                    // Find the index of the photo in the photoPaths list
+                    int index = photoService.photoPaths.IndexOf(value.UriSource.LocalPath);
+                    if (index >= 0 && photoService.photos.TryGetValue(index, out var existingPhoto))
+                    {
+                        _currentPhoto = existingPhoto; // Use the existing ImageObj
+                        FileName = existingPhoto.UriSource; // Set the file name
+                        IsPhotoCopied = existingPhoto.IsCopied; // Preserve the IsCopied state
+
+                        Debug.WriteLine("Current photo: " + _currentPhoto.UriSource);
+                        Debug.WriteLine("Is Photo Copied: " + _currentPhoto.IsCopied);
+                    }
                 }
                 else
                 {
@@ -58,10 +71,15 @@ namespace PhotoSorter.ViewModel
             {
                 _currentIndex = value;
                 OnPropertyChanged(nameof(CurrentIndex));
+                OnPropertyChanged(nameof(DisplayIndex));
                 photoService.LoadBuffer(CurrentIndex); // Load the buffer whenever index changes
                 UpdateCurrentPhoto();
             }
         }
+
+        public string DisplayIndex => $"{CurrentIndex + 1} / {photoService.photoPaths.Count}"; // Display the current index in the UI
+        public string SourceAndDestination => $"Source: {SourceFolder} \nDestination: {DestinationFolder}"; // Display the source and destination folders in the UI
+
 
         // Binds file paths to the view
         private string _sourceFolder;
@@ -83,6 +101,33 @@ namespace PhotoSorter.ViewModel
             {
                 _destinationFolder = value;
                 OnPropertyChanged(nameof(DestinationFolder)); // Notify view of property change
+            }
+        }
+
+        private string _fileName;
+        public string FileName
+        {
+            get => _fileName;
+            set
+            {
+
+                string filePath = new Uri(value).LocalPath;
+                _fileName = System.IO.Path.GetFileName(filePath);
+                OnPropertyChanged(nameof(FileName)); // Notify view of property change
+            }
+        }
+
+        private bool _isPhotoCopied;
+        public bool IsPhotoCopied
+        {
+            get => _isPhotoCopied;
+            set
+            {
+                if (_isPhotoCopied != value) // Only raise change if the value is different
+                {
+                    _isPhotoCopied = value;
+                    OnPropertyChanged(nameof(IsPhotoCopied)); // Notify the UI of the change
+                }
             }
         }
 
@@ -120,7 +165,13 @@ namespace PhotoSorter.ViewModel
         // Action methods for each command
         private void ExecutePrev5(object parameter)
         {
-            // Logic for skipping back 5 items
+            if (CurrentIndex >= 5)
+            {
+                CurrentIndex -= 5;
+            } else if (CurrentIndex > 0)
+            {
+                CurrentIndex = 0;
+            }
         }
 
         private void ExecutePrev(object parameter)
@@ -137,7 +188,23 @@ namespace PhotoSorter.ViewModel
             string fileToCopy = photoService.photos[CurrentIndex].UriSource;
             try
             {
+                // First parameter is the source file, second is the destination file. The destination file is the destination folder + the file name
                 System.IO.File.Copy(fileToCopy, DestinationFolder + "\\" + System.IO.Path.GetFileName(fileToCopy));
+
+
+                photoService.photos[CurrentIndex].IsCopied = true; // Mark the photo as copied
+                Debug.WriteLine("Current photo: " + photoService.photos[CurrentIndex].IsCopied);
+
+                CurrentIndex++; // Move to the next photo after copying              
+
+                // Update the current index in the FolderPair, so that the next time the program is opened, it will start from the correct index
+                // Which is the index of the last copied file. Later if user wants to save the progress, this index can be saved to a file.
+                if (CurrentIndex > FolderPair.CurrentIndex)
+                {
+                    FolderPair.CurrentIndex = CurrentIndex;
+                }
+
+                
             }
             catch (Exception e)
             {
@@ -157,7 +224,13 @@ namespace PhotoSorter.ViewModel
 
         private void ExecuteNext5(object parameter)
         {
-            // Logic for skipping forward 5 items
+            if (CurrentIndex < photoService.photoPaths.Count - 5)
+            {
+                CurrentIndex += 5;
+            } else if (CurrentIndex < photoService.photoPaths.Count - 1)
+            {
+                CurrentIndex = photoService.photoPaths.Count - 1;
+            }
         }
 
         private void UpdateCurrentPhoto()
