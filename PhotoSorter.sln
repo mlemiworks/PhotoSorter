@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoSorter", "PhotoSorter\PhotoSorter.csproj", "{5076390E-47E7-4BA7-93A8-05880F5633F1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5076390E-47E7-4BA7-93A8-05880F5633F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5076390E-47E7-4BA7-93A8-05880F5633F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5076390E-47E7-4BA7-93A8-05880F5633F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5076390E-47E7-4BA7-93A8-05880F5633F1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8632B405-77E5-46BA-B6B5-7ECAC150E3F2}
+	EndGlobalSection
+EndGlobal

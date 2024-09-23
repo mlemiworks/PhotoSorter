@@ -1,0 +1,91 @@
+﻿<Window x:Class="PhotoSorter.View.StartWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:PhotoSorter.Converters"
+        mc:Ignorable="d"
+        Title="PhotoSorter - Start" SizeToContent="WidthAndHeight">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:MultiValueConverter x:Key="MultiValueConverter"/>
+    </Window.Resources>
+
+    <Grid Width="400" Height="400">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Welcome to PhotoSorter" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="Please select the folder with photos you want to sort"/>
+
+            <Button Name="beginButton" 
+                    Command="{Binding ToggleVisibilityCommand}"
+                    Content="Begin sorting" Width="150" Height="23"
+                    Visibility="{Binding IsStartMenuButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            
+            
+            <StackPanel x:Name="fileNameInput" 
+                        Visibility="{Binding IsFileNameInputVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                
+                <Label Content="Set folders:"/>
+                <Grid Margin="0 5 0 0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80px"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="0" Content="Source" VerticalAlignment="Center" />
+                        <ScrollViewer Grid.Column="1" Width="200" Height="23" HorizontalAlignment="Left">
+                            <TextBox x:Name="SourcePath" 
+                                 Margin="5,0,0,0" 
+                                 Text="{Binding SourcePath, UpdateSourceTrigger=PropertyChanged}" 
+                                 TextWrapping="NoWrap"
+                                 MinWidth="100"/>
+                        </ScrollViewer>
+                        <Button Grid.Column="2" Content="Browse" Width="60" Height="23" Margin="5,0,0,0" Command="{Binding SetSourceFolderCommand}"/>
+
+
+
+                </Grid>
+
+                <Grid Margin="0 5 0 0">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80px"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+     
+                        <Label Content="Destination" VerticalAlignment="Center" Grid.Column="0" />
+                        <ScrollViewer Grid.Column="1" Width="200" Height="23" HorizontalAlignment="Left" >
+                            <TextBox x:Name="DestinationPath" 
+                                 Margin="5,0,0,0" 
+                                 Text="{Binding DestinationPath, UpdateSourceTrigger=PropertyChanged}" 
+                                 TextWrapping="NoWrap"
+                                 MinWidth="100"/>
+                        </ScrollViewer>
+                        <Button Grid.Column="2" Content="Browse" Width="60" Height="23" Margin="5,0,0,0" Command="{Binding SetDestinationFolderCommand}"/>
+ 
+                </Grid>
+
+                <Button x:Name="startButton" 
+                        Content="Start sorting" Width="150" Height="23" 
+                        Command="{Binding OpenMainWindowCommand}">
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                            <Binding ElementName="SourcePath" Path="Text"/>
+                            <Binding ElementName="DestinationPath" Path="Text"/>
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>
+
+                <Button x:Name="goBackButton" Margin="0 10 0 0" Content="Back" Width="150" Height="23"
+                        Command="{Binding ToggleVisibilityCommand}"/>
+            </StackPanel>
+
+            <Button x:Name="continueSortingButton" Content="Continue sorting" Width="150" Height="23" Margin="0 10"
+                    Visibility="{Binding IsStartMenuButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
+    </Grid>
+</Window>
