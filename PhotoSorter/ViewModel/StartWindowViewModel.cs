@@ -126,6 +126,11 @@ namespace PhotoSorter.ViewModel
             // The parameter is expected to be a tuple of two strings
             if (parameter is (string source, string destination))
             {
+                if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(destination))
+                {
+                    System.Windows.MessageBox.Show("Please select both a source and destination folder.");
+                    return;
+                }
                 // Initialize the object (model) with the source and destination paths
                 FolderPair folderPair = new FolderPair(source, destination);
 

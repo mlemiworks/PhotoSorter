@@ -11,27 +11,35 @@ using System.Windows.Controls;
 using PhotoSorter.Services;
 using System.Windows.Media.Imaging;
 using System.Diagnostics;
+using System.Windows.Media;
+using System.IO;
+using System.Drawing;
 
 namespace PhotoSorter.ViewModel
 {
     public class MainWindowViewModel : ViewModelBase
     {
+
+        // FolderPair object to hold the source, destination folders and prgress index
         public FolderPair FolderPair { get; }
 
         
 
         private PhotoService photoService = new PhotoService();
         // Commands for navigating through the files
-        public ICommand Prev5Command { get; }
-        public ICommand PrevCommand { get; }
-        public ICommand NextCommand { get; }
-        public ICommand Next5Command { get; }
+        public ICommand Prev5Command { get; } // Move back 5 photos
+        public ICommand PrevCommand { get; } // Move back 1 photo
+        public ICommand NextCommand { get; } // Move forward 1 photo
+        public ICommand Next5Command { get; } // Move forward 5 photos
+        public ICommand RotateLeftCommand { get; } // Rotate the image left, param is set when the command is called
+        public ICommand RotateRightCommand { get; } // Rotate the image right, param is set when the command is called
 
 
         // Copies the file from source to destination
         public ICommand CopyCommand { get; }
 
 
+        // Object to hold the current photo, index, and other properties
         private ImageObj _currentPhoto;
 
 
@@ -62,6 +70,8 @@ namespace PhotoSorter.ViewModel
             }
         }
 
+
+        // Index of the current photo, used to navigate through the photos
         private int _currentIndex;
 
         public int CurrentIndex
@@ -77,6 +87,8 @@ namespace PhotoSorter.ViewModel
             }
         }
 
+
+        // Display the current index in the UI, e.g. "1 / 10". Also destination and source folders.
         public string DisplayIndex => $"{CurrentIndex + 1} / {photoService.photoPaths.Count}"; // Display the current index in the UI
         public string SourceAndDestination => $"Source: {SourceFolder} \nDestination: {DestinationFolder}"; // Display the source and destination folders in the UI
 
@@ -104,6 +116,8 @@ namespace PhotoSorter.ViewModel
             }
         }
 
+
+        // Binds the file name to the view, appears above the image
         private string _fileName;
         public string FileName
         {
@@ -117,6 +131,9 @@ namespace PhotoSorter.ViewModel
             }
         }
 
+
+        // Binds the IsPhotoCopied property to the view, used to show if the photo has been copied
+        // Is seen as a green checkmark in the view
         private bool _isPhotoCopied;
         public bool IsPhotoCopied
         {
@@ -130,6 +147,26 @@ namespace PhotoSorter.ViewModel
                 }
             }
         }
+
+        // Rotation angle for the image, used to rotate the image in the view
+        // The image is rotated in the view, not in the actual image file
+        private double _rotationAngle;
+        public double RotationAngle
+        {
+            get => _rotationAngle;
+            set
+            {
+                _rotationAngle = value;
+                OnPropertyChanged(nameof(RotationAngle));
+                // No need to manipulate the imageDisplay directly
+            }
+        }
+
+        public void RotateImage(double angle)
+        {
+            RotationAngle += angle;
+        }
+
 
         public MainWindowViewModel(FolderPair folderPair)
         {
@@ -146,6 +183,8 @@ namespace PhotoSorter.ViewModel
             NextCommand = new RelayCommand(ExecuteNext);
             Next5Command = new RelayCommand(ExecuteNext5);
             CopyCommand = new RelayCommand(ExecuteCopy);
+            RotateLeftCommand = new RelayCommand(param => RotateImage(-90));
+            RotateRightCommand = new RelayCommand(param => RotateImage(90));
 
             InitializeAsync(folderPair);
         }
@@ -231,7 +270,13 @@ namespace PhotoSorter.ViewModel
             {
                 CurrentIndex = photoService.photoPaths.Count - 1;
             }
+
+
         }
+
+
+       
+
 
         private void UpdateCurrentPhoto()
         {

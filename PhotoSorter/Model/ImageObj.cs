@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 
 namespace PhotoSorter.Model
 {
-    public class ImageObj
+    public class ImageObj : IDisposable
     {
         public BitmapImage Image { get; private set; }
         public int Index { get; set; }
@@ -25,6 +25,11 @@ namespace PhotoSorter.Model
             Image = image;
 
             IsCopied = false;
+        }
+
+        public void Dispose()
+        {
+            Image = null;
         }
 
     }

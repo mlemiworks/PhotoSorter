@@ -11,18 +11,22 @@
     <Window.Resources>
         <converters:ImageSizeConverter x:Key="ImageSizeConverter"/>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:CenterConverter x:Key="CenterConverter"/>
     </Window.Resources>
 
     <Window.InputBindings>
         <KeyBinding Key="Left" Command="{Binding PrevCommand}"/>
         <KeyBinding Key="Right" Command="{Binding NextCommand}"/>
-        
+
         <KeyBinding Key="Left" Modifiers ="Ctrl" Command="{Binding Prev5Command}"/>
         <KeyBinding Key="Right" Modifiers ="Ctrl" Command="{Binding Next5Command}"/>
 
         <KeyBinding Key="Up" Command="{Binding CopyCommand}"/>
-        
+
+        <KeyBinding Key="Left" Modifiers="Shift" Command="{Binding RotateLeftCommand}"/>
+        <KeyBinding Key="Right" Modifiers="Shift" Command="{Binding RotateRightCommand}"/>
     </Window.InputBindings>
+
 
 
     <Grid Background="#123566">
@@ -30,7 +34,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition/>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0">
@@ -44,19 +48,24 @@
                 <Label Content="{Binding DisplayIndex}"/>
                 <Image Name="checkMark" Source="pack://application:,,,/Resources/check.png" ToolTip="Already copied"
                        Visibility="{Binding IsPhotoCopied, Converter={StaticResource BooleanToVisibilityConverter}}"/>
- 
             </StackPanel>
 
 
             <Image
-       Name="imageDisplay"
-       Stretch="Uniform" 
-       HorizontalAlignment="Center"
-       VerticalAlignment="Center"
-       RenderOptions.BitmapScalingMode="HighQuality"
-       MaxWidth="{Binding ActualHeight, ElementName=mainWindow, Converter={StaticResource ImageSizeConverter}, ConverterParameter=Width}"
-       MaxHeight="{Binding ActualWidth, ElementName=mainWindow, Converter={StaticResource ImageSizeConverter}, ConverterParameter=Height}"
-       Source="{Binding CurrentPhoto}">
+                Name="imageDisplay"
+                Stretch="Uniform" 
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                RenderOptions.BitmapScalingMode="HighQuality"
+                MaxWidth="{Binding ActualHeight, ElementName=mainWindow, Converter={StaticResource ImageSizeConverter}, ConverterParameter=Width}"
+                MaxHeight="{Binding ActualWidth, ElementName=mainWindow, Converter={StaticResource ImageSizeConverter}, ConverterParameter=Height}"
+                Source="{Binding CurrentPhoto}">
+                
+                <Image.RenderTransform>
+                    <RotateTransform Angle="{Binding RotationAngle}" 
+                        CenterX="{Binding ActualWidth, ElementName=imageDisplay, Converter={StaticResource CenterConverter}}" 
+                        CenterY="{Binding ActualHeight, ElementName=imageDisplay, Converter={StaticResource CenterConverter}}"/>
+                </Image.RenderTransform>
             </Image>  
         </StackPanel>
 
@@ -69,15 +78,23 @@
 
 
 
-        <Grid Grid.Row="2">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button x:Name="Prev5Btn" Width="50" Height="30" Margin="20" Content="Prev 5" Command="{Binding Prev5Command}"/>
-                <Button x:Name="PrevBtn" Width="50" Height="30" Margin="20" Content="Prev" Command="{Binding PrevCommand}"/>
-                <Button x:Name="CopyBtn" Width="50" Height="30" Margin="20" Content="Copy" Command="{Binding CopyCommand}"/>
-                <!--<Button Width="50" Height="30" Margin="20" Content="Del"/>-->
-                <Button x:Name="NextBtn" Width="50" Height="30" Margin="20" Content="Next" Command="{Binding NextCommand}"/>
-                <Button x:Name="Next5Btn" Width="50" Height="30" Margin="20" Content="Skip 5" Command="{Binding Next5Command}"/>
+        <Grid Grid.Row="2" Margin="0 0 0 0">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="Prev5Btn" Width="50" Height="30" Margin="20" Content="Prev 5" Command="{Binding Prev5Command}" ToolTip="Ctrl + Left Arrow"/>
+                    <Button x:Name="PrevBtn" Width="50" Height="30" Margin="20" Content="Prev" Command="{Binding PrevCommand}" ToolTip="Left Arrow"/>
+                    <Button x:Name="CopyBtn" Width="50" Height="30" Margin="20" Content="Copy" Command="{Binding CopyCommand}" ToolTip="Up Arrow"/>
+                    <!--<Button Width="50" Height="30" Margin="20" Content="Del"/>-->
+                    <Button x:Name="NextBtn" Width="50" Height="30" Margin="20" Content="Next" Command="{Binding NextCommand}" ToolTip="Right Arrow"/>
+                    <Button x:Name="Next5Btn" Width="50" Height="30" Margin="20" Content="Skip 5" Command="{Binding Next5Command}" ToolTip="Ctrl + Right Arrow"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button Margin="0 0 10 20" Content="Rotate Left" Command="{Binding RotateLeftCommand}" ToolTip="Shift + Left Arrow"/>
+                    <Button Margin="10 0 0 20" Content="Rotate Right" Command="{Binding RotateRightCommand}" ToolTip="Shift + Right Arrow" />
+                </StackPanel>
             </StackPanel>
+            
 
         </Grid>
 
