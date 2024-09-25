@@ -33,25 +33,24 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
-            <RowDefinition/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="110"/>
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0">
             <Label Content="{Binding SourceAndDestination}"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="1">
+        <Grid Grid.Row="1">
 
-            <StackPanel Margin="0 10" Orientation="Horizontal" HorizontalAlignment="Center" Height="30px">
-                <Label Content="{Binding FileName}"/>
-                <Label Content="{Binding DisplayIndex}"/>
-                <Image Name="checkMark" Source="pack://application:,,,/Resources/check.png" ToolTip="Already copied"
-                       Visibility="{Binding IsPhotoCopied, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            </StackPanel>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
 
 
             <Image
+                Grid.Row="0"
                 Name="imageDisplay"
                 Stretch="Uniform" 
                 HorizontalAlignment="Center"
@@ -66,8 +65,15 @@
                         CenterX="{Binding ActualWidth, ElementName=imageDisplay, Converter={StaticResource CenterConverter}}" 
                         CenterY="{Binding ActualHeight, ElementName=imageDisplay, Converter={StaticResource CenterConverter}}"/>
                 </Image.RenderTransform>
-            </Image>  
-        </StackPanel>
+            </Image>
+
+            <StackPanel Grid.Row="1" Margin="0 10 0 0" Orientation="Horizontal" HorizontalAlignment="Center" Height="30px">
+                <Label Content="{Binding FileName}"/>
+                <Label Content="{Binding DisplayIndex}"/>
+                <Image Name="checkMark" Source="pack://application:,,,/Resources/check.png" ToolTip="Already copied"
+           Visibility="{Binding IsPhotoCopied, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            </StackPanel>
+        </Grid>
 
 
 
