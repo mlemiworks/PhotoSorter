@@ -5,14 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:PhotoSorter.Converters"
         mc:Ignorable="d"
-        Title="PhotoSorter - Start" SizeToContent="WidthAndHeight">
+        Title="PhotoSorter - Start" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen">
+
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:MultiValueConverter x:Key="MultiValueConverter"/>
+
+        <Style TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        
+
     </Window.Resources>
 
-    <Grid Width="400" Height="300">
+    <Grid Width="400" Height="250" Margin="0 10 0 10" >
 
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -20,23 +43,26 @@
         </Grid.RowDefinitions>
 
 
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0">
-            <TextBlock Text="Welcome to PhotoSorter" FontSize="20" FontWeight="Bold"/>
-            <TextBlock Text="Please select the folder with photos you want to sort" Margin="0 0 0 20"/>
-        </StackPanel>
-        
+        <Border Grid.Row="0" Background="LightBlue">
+            <!-- Set your desired color here -->
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="Welcome to PhotoSorter" FontSize="20" FontWeight="Bold"/>
+                <TextBlock Text="Begin sorting or continue from previous session" Margin="0 0 40 10"/>
+            </StackPanel>
+        </Border>
+
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1">
-            
+
 
             <Button Name="beginButton" 
                     Command="{Binding ToggleVisibilityCommand}"
                     Content="Begin sorting" Width="150" Height="23" Margin="0 30 0 0"
                     Visibility="{Binding IsStartMenuButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            
-            
+
+
             <StackPanel x:Name="fileNameInput" 
                         Visibility="{Binding IsFileNameInputVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                
+
                 <Label Content="Set folders:"/>
                 <Grid Margin="0 5 0 0">
 
@@ -46,42 +72,48 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Content="Source" VerticalAlignment="Center" />
-                        <ScrollViewer Grid.Column="1" Width="200" Height="23" HorizontalAlignment="Left">
-                            <TextBox x:Name="SourcePath" 
-                                 Margin="5,0,0,0" 
-                                 Text="{Binding SourcePath, UpdateSourceTrigger=PropertyChanged}" 
+                    <Label Grid.Column="0" Content="Source" VerticalAlignment="Center" />
+
+                    <TextBox x:Name="SourcePath" 
+                                 Grid.Column="1"
+                                 Height="23"
+                                 VerticalContentAlignment="Center"
+                                 Margin="5,0,5,0" 
+                                 Text="{Binding SourcePath}" 
                                  TextWrapping="NoWrap"
-                                 MinWidth="100"/>
-                        </ScrollViewer>
-                        <Button Grid.Column="2" Content="Browse" Width="60" Height="23" Margin="5,0,0,0" Command="{Binding SetSourceFolderCommand}"/>
+                                 MinWidth="100" 
+                                 Width="200"/>
+
+                    <Button Grid.Column="2" Content="Browse" Width="60" Height="23" Margin="5,0,0,0" Command="{Binding SetSourceFolderCommand}"/>
 
 
 
                 </Grid>
 
-                <Grid Margin="0 5 0 0">
+                <Grid Margin="0 5 5 0">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80px"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-     
-                        <Label Content="Destination" VerticalAlignment="Center" Grid.Column="0" />
-                        <ScrollViewer Grid.Column="1" Width="200" Height="23" HorizontalAlignment="Left" >
-                            <TextBox x:Name="DestinationPath" 
-                                 Margin="5,0,0,0" 
-                                 Text="{Binding DestinationPath, UpdateSourceTrigger=PropertyChanged}" 
-                                 TextWrapping="NoWrap"
-                                 MinWidth="100"/>
-                        </ScrollViewer>
-                        <Button Grid.Column="2" Content="Browse" Width="60" Height="23" Margin="5,0,0,0" Command="{Binding SetDestinationFolderCommand}"/>
- 
+
+                    <Label Content="Destination" VerticalAlignment="Center" Grid.Column="0" />
+                    <TextBox x:Name="DestinationPath" 
+                         Grid.Column="1"
+                         Height="23"
+                         VerticalContentAlignment="Center"
+                         Margin="5,0,5,0" 
+                         Text="{Binding DestinationPath}" 
+                         TextWrapping="NoWrap"
+                         MinWidth="100" 
+                         Width="200"/>
+                    <Button Grid.Column="2" Content="Browse" Width="60" Height="23" Margin="5,0,0,0" Command="{Binding SetDestinationFolderCommand}"/>
+
                 </Grid>
 
                 <Button x:Name="startButton" 
-                        Content="Start sorting" Width="150" Height="23" Margin="0 10px 0 0"
+                        Content="Start sorting" Width="150" Height="23" Margin="0 20 0 0"
                         Command="{Binding OpenMainWindowCommand}">
                     <Button.CommandParameter>
                         <MultiBinding Converter="{StaticResource MultiValueConverter}">

@@ -6,13 +6,19 @@
         xmlns:converters="clr-namespace:PhotoSorter.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Width="600" Height="700"
+        WindowStartupLocation="CenterScreen"
         x:Name="mainWindow">
 
     <Window.Resources>
         <converters:ImageSizeConverter x:Key="ImageSizeConverter"/>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <converters:CenterConverter x:Key="CenterConverter"/>
+
+
+        
+
     </Window.Resources>
+
+    
 
     <Window.InputBindings>
         <KeyBinding Key="Left" Command="{Binding PrevCommand}"/>
@@ -29,7 +35,7 @@
 
 
 
-    <Grid Background="#123566">
+    <Grid Background="#E0E0E0">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
@@ -50,6 +56,7 @@
 
 
             <Image
+                Panel.ZIndex="-1"
                 Grid.Row="0"
                 Name="imageDisplay"
                 Stretch="Uniform" 
@@ -59,12 +66,10 @@
                 MaxWidth="{Binding ActualHeight, ElementName=mainWindow, Converter={StaticResource ImageSizeConverter}, ConverterParameter=Width}"
                 MaxHeight="{Binding ActualWidth, ElementName=mainWindow, Converter={StaticResource ImageSizeConverter}, ConverterParameter=Height}"
                 Source="{Binding CurrentPhoto}">
-                
-                <Image.RenderTransform>
-                    <RotateTransform Angle="{Binding RotationAngle}" 
-                        CenterX="{Binding ActualWidth, ElementName=imageDisplay, Converter={StaticResource CenterConverter}}" 
-                        CenterY="{Binding ActualHeight, ElementName=imageDisplay, Converter={StaticResource CenterConverter}}"/>
-                </Image.RenderTransform>
+
+                <Image.LayoutTransform>
+                    <RotateTransform Angle="{Binding RotationAngle}"/>
+                </Image.LayoutTransform>
             </Image>
 
             <StackPanel Grid.Row="1" Margin="0 10 0 0" Orientation="Horizontal" HorizontalAlignment="Center" Height="30px">
@@ -77,30 +82,44 @@
 
 
 
-  
-           
-
-  
-
-
-
         <Grid Grid.Row="2" Margin="0 0 0 0">
             <StackPanel>
+
+                <StackPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource BaseButton}"/>
+                </StackPanel.Resources>
+                
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button x:Name="Prev5Btn" Width="50" Height="30" Margin="20" Content="Prev 5" Command="{Binding Prev5Command}" ToolTip="Ctrl + Left Arrow"/>
                     <Button x:Name="PrevBtn" Width="50" Height="30" Margin="20" Content="Prev" Command="{Binding PrevCommand}" ToolTip="Left Arrow"/>
-                    <Button x:Name="CopyBtn" Width="50" Height="30" Margin="20" Content="Copy" Command="{Binding CopyCommand}" ToolTip="Up Arrow"/>
+                    <Button Style="{StaticResource CopyBtnStyle}" x:Name="CopyBtn" Width="50" Height="30" Margin="20" Content="Copy" Command="{Binding CopyCommand}" ToolTip="Up Arrow" RenderTransformOrigin="0.5,0.167">
+
+               
+
+                    </Button>
                     <!--<Button Width="50" Height="30" Margin="20" Content="Del"/>-->
                     <Button x:Name="NextBtn" Width="50" Height="30" Margin="20" Content="Next" Command="{Binding NextCommand}" ToolTip="Right Arrow"/>
                     <Button x:Name="Next5Btn" Width="50" Height="30" Margin="20" Content="Skip 5" Command="{Binding Next5Command}" ToolTip="Ctrl + Right Arrow"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <Button Margin="0 0 10 20" Content="Rotate Left" Command="{Binding RotateLeftCommand}" ToolTip="Shift + Left Arrow"/>
-                    <Button Margin="10 0 0 20" Content="Rotate Right" Command="{Binding RotateRightCommand}" ToolTip="Shift + Right Arrow" />
+                    <Button Margin="0 0 10 20" Command="{Binding RotateLeftCommand}" ToolTip="Shift + Left Arrow">
+                        <Image Source="pack://application:,,,/Resources/rotate.png" Width="20" Height="20" RenderOptions.BitmapScalingMode="HighQuality"
+                               Margin="2" RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
+                                <ScaleTransform ScaleX="-1"/>
+                            </Image.RenderTransform>
+                        </Image>
+                        
+                    </Button>
+                    <Button Margin="10 0 0 20" Command="{Binding RotateRightCommand}" ToolTip="Shift + Right Arrow">
+                        <Image Source="pack://application:,,,/Resources/rotate.png" Width="20" Height="20" RenderOptions.BitmapScalingMode="HighQuality"
+                               Margin="2"/>
+
+                    </Button>
                 </StackPanel>
             </StackPanel>
-            
+
 
         </Grid>
 

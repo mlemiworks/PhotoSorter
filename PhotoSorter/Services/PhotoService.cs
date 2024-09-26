@@ -63,11 +63,6 @@ namespace PhotoSorter.Services
                 photos[key]?.Dispose(); // Dispose if necessary
                 photos.Remove(key); // Remove from the dictionary
             }
-
-            foreach (var photo in photos)
-            {
-                Debug.WriteLine("Photo: " + photo.Key + " is copied: " + photo.Value.IsCopied);
-            }
         }
 
     }

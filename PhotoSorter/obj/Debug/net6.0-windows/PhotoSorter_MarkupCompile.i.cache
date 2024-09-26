@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\lemil\OneDrive\Tiedostot\Omat Projektit\PhotoSorter\PhotoSorter\App.xaml
-2874538214
+3892303090
 
-19-412457461
+17-473214812
 2031807832829
-View\MainWindow.xaml;View\StartWindow.xaml;
+Resources\Styles.xaml;View\MainWindow.xaml;View\StartWindow.xaml;
 
-False
+True
 
