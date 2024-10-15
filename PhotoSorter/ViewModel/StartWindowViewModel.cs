@@ -4,6 +4,9 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Forms;
 using System;
+using PhotoSorter.Services;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace PhotoSorter.ViewModel
 {
@@ -15,6 +18,20 @@ namespace PhotoSorter.ViewModel
         public ICommand SetSourceFolderCommand { get; }
 
         public ICommand SetDestinationFolderCommand { get; }
+
+        private readonly DatabaseService _databaseService;
+
+        public ObservableCollection<FolderPair> FolderPairs { get; set; }
+
+        private ObservableCollection<FolderPair> _folderPairs
+        {
+            get => FolderPairs;
+            set
+            {
+                                FolderPairs = value;
+                OnPropertyChanged(nameof(FolderPairs));
+            }
+        }
 
         private string _sourcePath;
         public string SourcePath
@@ -76,6 +93,10 @@ namespace PhotoSorter.ViewModel
             SetSourceFolderCommand = new RelayCommand(SetSourceFolder);
             SetDestinationFolderCommand = new RelayCommand(SetDestinationFolder);
 
+            _databaseService = new DatabaseService();
+
+             _folderPairs = _databaseService.getAllFolderPairs();
+
 
         }
 
@@ -132,7 +153,7 @@ namespace PhotoSorter.ViewModel
                     return;
                 }
                 // Initialize the object (model) with the source and destination paths
-                FolderPair folderPair = new FolderPair(source, destination);
+                FolderPair folderPair = new FolderPair(null, source, destination);
 
                 // Open the MainWindow with the initialized object
                 MainWindowViewModel mainWindowViewModel = new MainWindowViewModel(folderPair);

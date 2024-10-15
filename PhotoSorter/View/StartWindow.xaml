@@ -60,7 +60,7 @@
                     Visibility="{Binding IsStartMenuButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
 
-            <StackPanel x:Name="fileNameInput" 
+            <StackPanel d:Visibility="Collapsed" x:Name="fileNameInput" 
                         Visibility="{Binding IsFileNameInputVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                 <Label Content="Set folders:"/>
@@ -127,8 +127,21 @@
                         Command="{Binding ToggleVisibilityCommand}"/>
             </StackPanel>
 
+            
+
             <Button x:Name="continueSortingButton" Content="Continue sorting" Width="150" Height="23" Margin="0 10"
                     Visibility="{Binding IsStartMenuButtonsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+            <ListView Height="80" Width="300" ItemsSource="{Binding FolderPairs}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Source" Width="140" DisplayMemberBinding="{Binding SourceFolderPath}"/>
+                        <GridViewColumn Header="Destination" Width="140" DisplayMemberBinding="{Binding DestinationFolderPath}"/>
+                        <GridViewColumn Header="Progress"  DisplayMemberBinding="{Binding CurrentIndex}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            
         </StackPanel>
     </Grid>
 </Window>
